@@ -33,7 +33,7 @@ def tag_instances():
     for all_instance in all_reservation['Instances']:
       all_instances.append(all_instance['InstanceId'])
 
-  # Append each InstanceId with backup:true to tagged_instances
+  # Append each InstanceId with backup:true (or false) to tagged_instances
   tagged_reservations = ec2.describe_instances(Filters = [{'Name': 'owner-id', 'Values':[owner_id]},{'Name': 'tag:backup', 'Values':['true','false']}])
   tagged_instances = []
   for tagged_reservation in tagged_reservations['Reservations']:
@@ -46,7 +46,7 @@ def tag_instances():
   # Print untagged InstanceId
   print("untagged_instanceids:",untagged_instances)
 
-  # Tag untagged instances
+  # Tag untagged instances with backup:true
   if untagged_instances:
     ec2.create_tags(
       Resources = untagged_instances,
